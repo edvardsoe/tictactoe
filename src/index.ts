@@ -25,12 +25,14 @@ let s8 = "⬜"
 let s9 = "⬜"
 let board = `${s1}${s2}${s3}\n${s4}${s5}${s6}\n${s7}${s8}${s9}`;
 
+
+// Updates and renders the board after each turn/reset
 function renderBoard() {
   return `${s1}${s2}${s3}\n${s4}${s5}${s6}\n${s7}${s8}${s9}`;
 }
 
 
-//This block describes what the bot will be listening for, aka: The server, server messages, and message content
+// This block describes what the bot will be listening for, aka: The server, server messages, and message content
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -101,7 +103,8 @@ async function alternateTurns() {
 }
 }
 
-// Checks if any player has won
+
+// Checks if any player has won based off of piece locations
 async function winCon() {
   if ((s1 === "⭕" && s2 === "⭕" && s3 === "⭕") ||
     (s1 === "❌" && s2 === "❌" && s3 === "❌")) {
@@ -161,8 +164,8 @@ async function winCon() {
       console.error("Error fetching/sending to channel:", err);
     }
   }
-  if ((s4 === "⭕" && s5 === "⭕" && s6 === "⭕") ||
-    (s4 === "❌" && s5 === "❌" && s6 === "❌")) {
+  if ((s2 === "⭕" && s5 === "⭕" && s8 === "⭕") ||
+    (s2 === "❌" && s5 === "❌" && s8 === "❌")) {
     try {
       const channel = await client.channels.fetch(CHANNEL_ID2);
       if (channel && channel instanceof TextChannel) {
@@ -175,8 +178,8 @@ async function winCon() {
       console.error("Error fetching/sending to channel:", err);
     }
   }
-  if ((s7=== "⭕" && s8 === "⭕" && s9 === "⭕") ||
-    (s7 === "❌" && s8 === "❌" && s9 === "❌")) {
+  if ((s3=== "⭕" && s6 === "⭕" && s9 === "⭕") ||
+    (s3 === "❌" && s6 === "❌" && s9 === "❌")) {
     try {
       const channel = await client.channels.fetch(CHANNEL_ID2);
       if (channel && channel instanceof TextChannel) {
@@ -230,7 +233,6 @@ if ((s1!= "⬜" && s2 != "⬜" && s3 != "⬜") && (s4 != "⬜" && s5 != "⬜" &&
   }
 }
 }
-
 
 
 // This block decides which commands are capable of being called and describes them
@@ -306,7 +308,7 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 
-//TOP ROW
+//TOP ROW FUNCTIONALITY
 client.on(Events.InteractionCreate, async interaction => {
   try {
     if (!interaction.isChatInputCommand()) return;
@@ -354,8 +356,7 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 
-
-//MIDDLE ROW
+//MIDDLE ROW FUNCTIONALITY
 client.on(Events.InteractionCreate, async interaction => {
   try {
     if (!interaction.isChatInputCommand()) return;
@@ -403,8 +404,7 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 
-
-//BOTTOM ROW
+//BOTTOM ROW FUNCTIONALITY
 client.on(Events.InteractionCreate, async interaction => {
   try {
     if (!interaction.isChatInputCommand()) return;
@@ -451,6 +451,7 @@ client.on(Events.InteractionCreate, async interaction => {
   }
 });
 
+
 // resets the game
 client.on(Events.InteractionCreate, async interaction => {
   try {
@@ -469,6 +470,8 @@ client.on(Events.InteractionCreate, async interaction => {
   }
 });
 
+
+// Lists out all possible commands
 client.on(Events.InteractionCreate, async interaction => {
   try {
     if (!interaction.isChatInputCommand()) return;
@@ -485,7 +488,6 @@ client.on(Events.InteractionCreate, async interaction => {
 // This block initially creates a "rest" client, and this is in order to communicate with discords API for command registration. 
 // Further into the block the various commands are registered to the server via the server ID. At the bottom, the bot client connects to discord.
 const rest = new REST({ version: '10' }).setToken(TOKEN);
-
 (async () => {
   try {
     console.log('Refreshing GUILD slash commands...');
